@@ -1,6 +1,6 @@
 # Dengage Android Sdk 
 ## Useful Links
-- [SDK Documentation](https://dev.dengage.com/push-sdk/android/)
+- [SDK Documentation](https://dev.dengage.com/mobile-sdk/android/)
 - [Admin Panel](https://appdev.dengage.com/)
 
 ## Sdk Implementation
@@ -35,14 +35,14 @@ dependencies {
 
 ## Sample App Content
 
-### 1 - Adding Manifest Rules (See [AndroidManifest](https://github.com/BatuhanCoskun/dEngage-sdk-sample/blob/main/app/src/main/AndroidManifest.xml))
+### 1 - Adding Manifest Rules (See [AndroidManifest](https://github.com/whitehorse-technology/dengage-android-sdk-sample/blob/master/app/src/main/AndroidManifest.xml))
 - `FcmMessagingService` -> Fcm Messaging Service for handling push messages comes from firebase
 - `HmsMessagingService` -> Hms Messaging Service for handling push messages comes from huawei messaging service
 - `PushNotificationReceiver` -> For handling push notifications comes to messaging service classes. Contains notification message ui creating
 - `den_event_api_url` (meta-data) -> Event api url of Dengage (Optional parameter)
 - `den_push_api_url`  (meta-data) -> Push api url of Dengage (Optional parameter)
 
-### 2 - Initiating Dengage Classes (See class [App](https://github.com/BatuhanCoskun/dEngage-sdk-sample/blob/main/app/src/main/java/com/dengage/android/kotlin/sample/App.kt))
+### 2 - Initiating Dengage Classes (See class [App](https://github.com/whitehorse-technology/dengage-android-sdk-sample/blob/main/app/src/main/java/com/dengage/android/kotlin/sample/App.kt))
 - `DengageManager` -> Initiate this class once in application runtime for using Dengage functions
 - `DengageEvent`   -> Initiate this class once in application runtime for using Dengage events
 - `registerActivityLifecycleCallbacks` -> Register activity lifecycle callback to handle application bring-to-foreground time
