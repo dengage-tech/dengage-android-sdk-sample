@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/page_margin"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etContactKey"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base_component_height"
+            android:hint="@string/contact_key"
+            android:textSize="@dimen/medium_text_size" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base_component_height"
+            android:layout_marginTop="12dp"
+            android:text="@string/button_save" />
+
+    </LinearLayout>
+
+</layout>
