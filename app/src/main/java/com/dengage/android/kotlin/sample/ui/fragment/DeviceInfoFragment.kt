@@ -31,11 +31,23 @@ class DeviceInfoFragment : BaseDataBindingFragment<FragmentDeviceInfoBinding>() 
         )
         binding.tvToken.text = getString(
             R.string.dengage_token,
-            activity?.getDengageManager()?.subscription?.token
+            activity?.getDengageManager()?.token
         )
         binding.tvContactKey.text = getString(
             R.string.dengage_contact_key,
             activity?.getDengageManager()?.subscription?.contactKey
+        )
+        binding.tvTimeZone.text = getString(
+            R.string.dengage_timezone,
+            activity?.getDengageManager()?.subscription?.timezone
+        )
+        binding.tvLanguage.text = getString(
+            R.string.dengage_language,
+            activity?.getDengageManager()?.subscription?.language
+        )
+        binding.tvUserPermission.text = getString(
+            R.string.dengage_user_permission,
+            activity?.getDengageManager()?.userPermission.toString()
         )
     }
 

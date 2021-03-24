@@ -5,6 +5,9 @@
     <string name="dengage_advertising_id">Advertising Id = %s</string>
     <string name="dengage_token">Token = %s</string>
     <string name="dengage_contact_key">Contact Key = %s</string>
+    <string name="dengage_timezone">TimeZone = %s</string>
+    <string name="dengage_language">Language = %s</string>
+    <string name="dengage_user_permission">User Permission = %s</string>
 
     <string name="contact_key">Contact Key</string>
     <string name="country">Country</string>
