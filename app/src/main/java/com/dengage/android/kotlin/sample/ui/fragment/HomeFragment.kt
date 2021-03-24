@@ -37,6 +37,10 @@ class HomeFragment : BaseDataBindingFragment<FragmentHomeBinding>() {
         binding.btnInAppMessage.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeToInAppMessage())
         }
+
+        binding.btnTags.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionHomeToTags())
+        }
     }
 
 }

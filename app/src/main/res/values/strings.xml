@@ -17,6 +17,7 @@
     <string name="button_country">Change Country</string>
     <string name="button_custom_events">Send Custom Event</string>
     <string name="button_in_app_message">In App Message</string>
+    <string name="button_tags">Set Tags</string>
     <string name="table_name">Table Name</string>
     <string name="button_send">Send</string>
     <string name="event_key">Event Key</string>
@@ -24,4 +25,9 @@
     <string name="button_mark_as_read">Read</string>
     <string name="button_delete">Delete</string>
     <string name="button_set_navigation">Set Navigation</string>
+    <string name="tag">Tag</string>
+    <string name="value">Value</string>
+    <string name="change_time">Change Time</string>
+    <string name="change_value">Change Value</string>
+    <string name="remove_time">Remove Time</string>
 </resources>

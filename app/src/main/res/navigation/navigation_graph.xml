@@ -28,6 +28,9 @@
         <action
             android:id="@+id/actionHomeToInAppMessage"
             app:destination="@id/inAppMessageFragment" />
+        <action
+            android:id="@+id/actionHomeToTags"
+            app:destination="@id/tagsFragment" />
     </fragment>
     <fragment
         android:id="@+id/deviceInfoFragment"
@@ -59,4 +62,9 @@
         android:name="com.dengage.android.kotlin.sample.ui.fragment.InAppMessageFragment"
         android:label="fragment_in_app_message"
         tools:layout="@layout/fragment_in_app_message" />
+    <fragment
+        android:id="@+id/tagsFragment"
+        android:name="com.dengage.android.kotlin.sample.ui.fragment.TagsFragment"
+        android:label="fragment_tags"
+        tools:layout="@layout/fragment_tags" />
 </navigation>
