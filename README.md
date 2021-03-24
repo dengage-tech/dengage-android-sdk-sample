@@ -98,3 +98,13 @@ You can change your contact key on Dengage after user login, register, logout et
 - You can change some fonts with overriding font files with the same file names. 
     - For in app title font, you should use `font_in_app_title` as file name (See example [font_in_app_title.xml](https://github.com/whitehorse-technology/dengage-android-sdk-sample/blob/master/app/src/main/res/font/font_in_app_title.xml))
     - For in app message font, you should use `font_in_app_message` as file name (See example [font_in_app_message.xml](https://github.com/whitehorse-technology/dengage-android-sdk-sample/blob/master/app/src/main/res/font/font_in_app_message.xml))
+
+### 9 - Send Tags (See class [TagsFragment](https://github.com/whitehorse-technology/dengage-android-sdk-sample/blob/master/app/src/main/java/com/dengage/android/kotlin/sample/ui/fragment/TagsFragment.kt))
+- `DengageManager.setTags` -> Use this method for sending tags
+    #### Method Params
+    - `tags` -> hashmap of tag parameters below
+        - `tag` -> tag name
+        - `value` -> tag value
+        - `changeTime` -> tag change time
+        - `changeValue` -> tag change value
+        - `removeTime` -> tag remove time
