@@ -58,7 +58,7 @@ class TagsFragment : BaseDataBindingFragment<FragmentTagsBinding>() {
         binding.btnSend.setOnClickListener {
             val tag = binding.etTag.text.toString().trim()
             val value = binding.etValue.text.toString().trim()
-            val changeValue = binding.cbChangeValue.isChecked
+            val changeValue = binding.etChangeValue.text.toString().trim()
 
             val tags = mutableListOf<TagItem>()
             val tagItem = TagItem(

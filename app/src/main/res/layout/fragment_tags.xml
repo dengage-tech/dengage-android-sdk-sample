@@ -30,11 +30,11 @@
             android:hint="@string/change_time"
             android:textSize="@dimen/medium_text_size" />
 
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/cbChangeValue"
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etChangeValue"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/base_component_height"
-            android:text="@string/change_value"
+            android:hint="@string/change_value"
             android:textSize="@dimen/medium_text_size" />
 
         <androidx.appcompat.widget.AppCompatEditText
