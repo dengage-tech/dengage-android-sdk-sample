@@ -21,9 +21,7 @@ class ContactKeyFragment : BaseDataBindingFragment<FragmentContactKeyBinding>() 
 
         binding.btnSave.setOnClickListener {
             val contactKey = binding.etContactKey.text.toString().trim()
-            if (contactKey.isNotEmpty()) {
-                activity?.getDengageManager()?.setContactKey(contactKey)
-            }
+            activity?.getDengageManager()?.setContactKey(contactKey)
         }
     }
 
