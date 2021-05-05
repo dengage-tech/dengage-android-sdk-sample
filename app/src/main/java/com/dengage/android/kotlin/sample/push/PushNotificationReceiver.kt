@@ -1,17 +1,22 @@
 package com.dengage.android.kotlin.sample.push
 
 import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.media.AudioAttributes
 import android.os.Build
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.dengage.android.kotlin.sample.R
+import com.dengage.sdk.Constants
 import com.dengage.sdk.NotificationReceiver
 import com.dengage.sdk.Utils
 import com.dengage.sdk.models.Message
+import java.util.*
 
 /**
  * Created by Batuhan Coskun on 19 December 2020
@@ -98,17 +103,12 @@ class PushNotificationReceiver : NotificationReceiver() {
         carouselView.setOnClickPendingIntent(R.id.den_carousel_item_title, carouseItemIntent)
         carouselView.setOnClickPendingIntent(R.id.den_carousel_item_description, carouseItemIntent)
         carouselView.setOnClickPendingIntent(R.id.den_carousel_right_arrow, carouselRightIntent)
-        // create channelId
-        var channelId: String? = null
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationChannel = notificationChannel
-            createNotificationChannel(context, notificationChannel)
-            channelId = notificationChannel.id
-        }
+
+        val channelId = createNotificationChannel(context, message)
 
         if (context != null) {
             // set views for the notification
-            val notification = NotificationCompat.Builder(context, channelId ?: "1")
+            val notification = NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setCustomContentView(collapsedView)
                 .setCustomBigContentView(carouselView)
@@ -213,17 +213,12 @@ class PushNotificationReceiver : NotificationReceiver() {
         carouselView.setOnClickPendingIntent(R.id.den_carousel_item_title, carouseItemIntent)
         carouselView.setOnClickPendingIntent(R.id.den_carousel_item_description, carouseItemIntent)
         carouselView.setOnClickPendingIntent(R.id.den_carousel_right_arrow, carouselRightIntent)
-        // create a channel id.
-        var channelId: String? = null
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationChannel = notificationChannel
-            createNotificationChannel(context, notificationChannel)
-            channelId = notificationChannel.id
-        }
+
+        val channelId = createNotificationChannel(context, message)
 
         if (context != null) {
             // set your views for the notification
-            val notification = NotificationCompat.Builder(context, channelId ?: "1")
+            val notification = NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setCustomContentView(collapsedView)
                 .setCustomBigContentView(carouselView)
@@ -239,6 +234,35 @@ class PushNotificationReceiver : NotificationReceiver() {
                 notification
             )
         }
+    }
+
+    private fun createNotificationChannel(context: Context?, message: Message?): String {
+        // generate new channel id for different sounds
+        val soundUri = Utils.getSound(context, message?.sound)
+        val channelId = UUID.randomUUID().toString()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationManager =
+                context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            // delete old notification channels
+            val channels = notificationManager.notificationChannels
+            if (channels != null && channels.size > 0) {
+                for (channel in channels) {
+                    notificationManager.deleteNotificationChannel(channel.id)
+                }
+            }
+            val notificationChannel = NotificationChannel(
+                channelId,
+                Constants.CHANNEL_NAME,
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            val audioAttributes = AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                .build()
+            notificationChannel.setSound(soundUri, audioAttributes)
+            notificationManager.createNotificationChannel(notificationChannel)
+        }
+        return channelId
     }
 
 }
