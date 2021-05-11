@@ -79,25 +79,8 @@ You can change your contact key on Dengage after user login, register, logout et
     - `activity` -> `AppCompatActivity` for showing in app message 
     - `screenName` -> screen name of current screen
 
-
 - You can change some colors with overriding color values with the same resource names (See on [colors.xml](https://github.com/dengage-tech/dengage-android-sdk-sample/blob/master/app/src/main/res/values/colors.xml))
-    - `in_app_message_color_background` -> Background color of in app message container (You can set it from dEngage panel)
-    - `in_app_message_color_title` -> In app title text color (You can set it from dEngage panel)
-    - `in_app_message_color_message` -> In app message text color (You can set it from dEngage panel)
     - `in_app_message_color_status_bar` -> In app message dialog has a status bar itself, you should set android status bar color 
-
-- You can change some dimensions with overriding dimension values with the same resource names (See on [dimens.xml](https://github.com/dengage-tech/dengage-android-sdk-sample/blob/master/app/src/main/res/values/dimens.xml))
-    - `in_app_message_text_size_title` -> In app title text size in sp
-    - `in_app_message_text_size_message` -> In app message text size in sp
-    - `in_app_message_height` -> In app message container height
-    - `in_app_message_margin_top` -> In app message container window margin top
-    - `in_app_message_margin_bottom` -> In app message container window margin bottom
-    - `in_app_message_margin_start` -> In app message container window margin start(left)
-    - `in_app_message_margin_end` -> In app message container window margin end(right)
-
-- You can change some fonts with overriding font files with the same file names. 
-    - For in app title font, you should use `font_in_app_title` as file name (See example [font_in_app_title.xml](https://github.com/dengage-tech/dengage-android-sdk-sample/blob/master/app/src/main/res/font/font_in_app_title.xml))
-    - For in app message font, you should use `font_in_app_message` as file name (See example [font_in_app_message.xml](https://github.com/dengage-tech/dengage-android-sdk-sample/blob/master/app/src/main/res/font/font_in_app_message.xml))
 
 ### 9 - Send Tags (See class [TagsFragment](https://github.com/dengage-tech/dengage-android-sdk-sample/blob/master/app/src/main/java/com/dengage/android/kotlin/sample/ui/fragment/TagsFragment.kt))
 - `DengageManager.setTags` -> Use this method for sending tags

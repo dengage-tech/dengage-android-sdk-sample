@@ -12,11 +12,7 @@
     <color name="progress_secondary">#8affffff</color>
     <color name="progress_max_active">@color/white</color>
 
-    <!-- In app message dimensions -->
-    <color name="in_app_message_color_background" tools:ignore="MissingDefaultResource">#ECECEC</color>
-    <color name="in_app_message_color_title" tools:ignore="MissingDefaultResource">#004E5A</color>
-    <color name="in_app_message_color_message" tools:ignore="MissingDefaultResource">#80232326</color>
+    <!-- In app message status bar color of popup -->
     <color name="in_app_message_color_status_bar" tools:ignore="MissingDefaultResource">#FF3700B3</color>
-    <!-- In app message dimensions -->
 
 </resources>

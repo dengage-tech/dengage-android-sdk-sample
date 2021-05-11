@@ -1,20 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <dimen name="small_text_size">12sp</dimen>
     <dimen name="medium_text_size">16sp</dimen>
     <dimen name="large_text_size">20sp</dimen>
     <dimen name="page_margin">20dp</dimen>
     <dimen name="base_component_height">54dp</dimen>
     <dimen name="progress_bar_height">2dp</dimen>
-
-    <!-- In app message dimensions -->
-    <dimen name="in_app_message_text_size_title" tools:ignore="MissingDefaultResource">16sp</dimen>
-    <dimen name="in_app_message_text_size_message" tools:ignore="MissingDefaultResource">14sp</dimen>
-    <dimen name="in_app_message_height" tools:ignore="MissingDefaultResource">86dp</dimen>
-    <dimen name="in_app_message_margin_top" tools:ignore="MissingDefaultResource">30dp</dimen>
-    <dimen name="in_app_message_margin_bottom" tools:ignore="MissingDefaultResource">30dp</dimen>
-    <dimen name="in_app_message_margin_start" tools:ignore="MissingDefaultResource">30dp</dimen>
-    <dimen name="in_app_message_margin_end" tools:ignore="MissingDefaultResource">30dp</dimen>
-    <!-- In app message dimensions -->
-
 </resources>
