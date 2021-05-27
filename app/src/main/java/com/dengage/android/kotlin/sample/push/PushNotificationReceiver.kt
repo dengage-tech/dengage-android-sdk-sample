@@ -6,8 +6,10 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.media.AudioAttributes
 import android.os.Build
+import android.util.Log
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -15,6 +17,8 @@ import com.dengage.android.kotlin.sample.R
 import com.dengage.sdk.Constants
 import com.dengage.sdk.NotificationReceiver
 import com.dengage.sdk.Utils
+import com.dengage.sdk.callback.DengageCallback
+import com.dengage.sdk.models.DengageError
 import com.dengage.sdk.models.Message
 import java.util.*
 
@@ -23,7 +27,7 @@ import java.util.*
  */
 class PushNotificationReceiver : NotificationReceiver() {
 
-    override fun onCarouselRender(context: Context?, intent: Intent?, message: Message?) {
+    override fun onCarouselRender(context: Context, intent: Intent?, message: Message?) {
         super.onCarouselRender(context, intent, message)
 
         val items = message?.carouselContent
@@ -36,12 +40,12 @@ class PushNotificationReceiver : NotificationReceiver() {
         val itemTitle = items[current].title
         val itemDesc = items[current].description
 
-        // set intets (right button, left button, item click)
-        val itemIntent = getItemClickIntent(intent.extras, context?.packageName)
-        val leftIntent = getLeftItemIntent(intent.extras, context?.packageName)
-        val rightIntent = getRightItemIntent(intent.extras, context?.packageName)
-        val deleteIntent = getDeleteIntent(intent.extras, context?.packageName)
-        val contentIntent = getContentIntent(intent.extras, context?.packageName)
+        // set intents (right button, left button, item click)
+        val itemIntent = getItemClickIntent(intent.extras, context.packageName)
+        val leftIntent = getLeftItemIntent(intent.extras, context.packageName)
+        val rightIntent = getRightItemIntent(intent.extras, context.packageName)
+        val deleteIntent = getDeleteIntent(intent.extras, context.packageName)
+        val contentIntent = getContentIntent(intent.extras, context.packageName)
         val carouseItemIntent = PendingIntent.getBroadcast(
             context, 0,
             itemIntent, PendingIntent.FLAG_UPDATE_CURRENT
@@ -65,13 +69,13 @@ class PushNotificationReceiver : NotificationReceiver() {
 
         // set views for the layout
         val collapsedView = RemoteViews(
-            context?.packageName,
+            context.packageName,
             R.layout.den_carousel_collapsed
         )
         collapsedView.setTextViewText(R.id.den_carousel_title, message.title)
         collapsedView.setTextViewText(R.id.den_carousel_message, message.message)
         val carouselView = RemoteViews(
-            context?.packageName,
+            context.packageName,
             R.layout.den_carousel_portrait
         )
         carouselView.setTextViewText(R.id.den_carousel_title, message.title)
@@ -79,7 +83,29 @@ class PushNotificationReceiver : NotificationReceiver() {
         carouselView.setTextViewText(R.id.den_carousel_item_title, itemTitle)
         carouselView.setTextViewText(R.id.den_carousel_item_description, itemDesc)
 
-        Utils.loadCarouselImageToView(
+        carouselView.setOnClickPendingIntent(R.id.den_carousel_left_arrow, carouselLeftIntent)
+        carouselView.setOnClickPendingIntent(
+            R.id.den_carousel_portrait_current_image,
+            carouseItemIntent
+        )
+        carouselView.setOnClickPendingIntent(R.id.den_carousel_item_title, carouseItemIntent)
+        carouselView.setOnClickPendingIntent(R.id.den_carousel_item_description, carouseItemIntent)
+        carouselView.setOnClickPendingIntent(R.id.den_carousel_right_arrow, carouselRightIntent)
+
+        val channelId = createNotificationChannel(context, message)
+
+        // set views for the notification
+        val notification = NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setCustomContentView(collapsedView)
+            .setCustomBigContentView(carouselView)
+            .setContentIntent(contentPendingIntent)
+            .setDeleteIntent(deletePendingIntent)
+            .build()
+
+
+        // --------- Behavior-1 ---------
+        /*Utils.loadCarouselImageToView(
             carouselView,
             R.id.den_carousel_portrait_left_image,
             items[left]
@@ -95,37 +121,54 @@ class PushNotificationReceiver : NotificationReceiver() {
             items[right]
         )
 
-        carouselView.setOnClickPendingIntent(R.id.den_carousel_left_arrow, carouselLeftIntent)
-        carouselView.setOnClickPendingIntent(
-            R.id.den_carousel_portrait_current_image,
-            carouseItemIntent
-        )
-        carouselView.setOnClickPendingIntent(R.id.den_carousel_item_title, carouseItemIntent)
-        carouselView.setOnClickPendingIntent(R.id.den_carousel_item_description, carouseItemIntent)
-        carouselView.setOnClickPendingIntent(R.id.den_carousel_right_arrow, carouselRightIntent)
+        // show message
+        val notificationManager = NotificationManagerCompat.from(context)
+        notificationManager.notify(
+            message.messageSource,
+            message.messageId,
+            notification
+        )*/
+        // --------- Behavior-1 ---------
 
-        val channelId = createNotificationChannel(context, message)
 
-        if (context != null) {
-            // set views for the notification
-            val notification = NotificationCompat.Builder(context, channelId)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setCustomContentView(collapsedView)
-                .setCustomBigContentView(carouselView)
-                .setContentIntent(contentPendingIntent)
-                .setDeleteIntent(deletePendingIntent)
-                .build()
-            // show message
-            val notificationManager = NotificationManagerCompat.from(context)
-            notificationManager.notify(
-                message.messageSource,
-                message.messageId,
-                notification
-            )
-        }
+        // You can use alternate behavior, if carousel image download bug occurs
+        // Comment Behavior-1 and uncomment Behavior-2
+        // --------- Behavior-2 ---------
+        Utils.loadCarouselContents(
+            message.carouselContent,
+            object : DengageCallback<Array<Bitmap>> {
+                override fun onError(error: DengageError) {
+                    Log.e("NotificationReceiver", error.errorMessage ?: "")
+                }
+
+                override fun onResult(result: Array<Bitmap>) {
+                    carouselView.setImageViewBitmap(
+                        R.id.den_carousel_portrait_left_image,
+                        result[left]
+                    )
+                    carouselView.setImageViewBitmap(
+                        R.id.den_carousel_portrait_current_image,
+                        result[current]
+                    )
+                    carouselView.setImageViewBitmap(
+                        R.id.den_carousel_portrait_right_image,
+                        result[right]
+                    )
+
+                    // show message
+                    val notificationManager = NotificationManagerCompat.from(context)
+                    notificationManager.notify(
+                        message.messageSource,
+                        message.messageId,
+                        notification
+                    )
+                }
+            })
+        // --------- Behavior-2 ---------
+
     }
 
-    override fun onCarouselReRender(context: Context?, intent: Intent?, message: Message?) {
+    override fun onCarouselReRender(context: Context, intent: Intent?, message: Message?) {
         super.onCarouselReRender(context, intent, message)
 
         val items = message?.carouselContent
@@ -147,11 +190,11 @@ class PushNotificationReceiver : NotificationReceiver() {
         val itemDesc = items[current].description
 
         // set intents (next button, rigth button and item click)
-        val itemIntent = getItemClickIntent(intent.extras, context?.packageName)
-        val leftIntent = getLeftItemIntent(intent.extras, context?.packageName)
-        val rightIntent = getRightItemIntent(intent.extras, context?.packageName)
-        val deleteIntent = getDeleteIntent(intent.extras, context?.packageName)
-        val contentIntent = getContentIntent(intent.extras, context?.packageName)
+        val itemIntent = getItemClickIntent(intent.extras, context.packageName)
+        val leftIntent = getLeftItemIntent(intent.extras, context.packageName)
+        val rightIntent = getRightItemIntent(intent.extras, context.packageName)
+        val deleteIntent = getDeleteIntent(intent.extras, context.packageName)
+        val contentIntent = getContentIntent(intent.extras, context.packageName)
         val carouseItemIntent = PendingIntent.getBroadcast(
             context, 0,
             itemIntent, PendingIntent.FLAG_UPDATE_CURRENT
@@ -175,19 +218,41 @@ class PushNotificationReceiver : NotificationReceiver() {
 
         // set views for the layout
         val collapsedView = RemoteViews(
-            context?.packageName,
+            context.packageName,
             R.layout.den_carousel_collapsed
         )
         collapsedView.setTextViewText(R.id.den_carousel_title, message.title)
         collapsedView.setTextViewText(R.id.den_carousel_message, message.message)
         val carouselView = RemoteViews(
-            context?.packageName,
+            context.packageName,
             R.layout.den_carousel_portrait
         )
         carouselView.setTextViewText(R.id.den_carousel_title, message.title)
         carouselView.setTextViewText(R.id.den_carousel_message, message.message)
         carouselView.setTextViewText(R.id.den_carousel_item_title, itemTitle)
         carouselView.setTextViewText(R.id.den_carousel_item_description, itemDesc)
+
+        carouselView.setOnClickPendingIntent(R.id.den_carousel_left_arrow, carouselLeftIntent)
+        carouselView.setOnClickPendingIntent(
+            R.id.den_carousel_portrait_current_image,
+            carouseItemIntent
+        )
+        carouselView.setOnClickPendingIntent(R.id.den_carousel_item_title, carouseItemIntent)
+        carouselView.setOnClickPendingIntent(R.id.den_carousel_item_description, carouseItemIntent)
+        carouselView.setOnClickPendingIntent(R.id.den_carousel_right_arrow, carouselRightIntent)
+
+        val channelId = createNotificationChannel(context, message)
+
+        // set your views for the notification
+        val notification = NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setCustomContentView(collapsedView)
+            .setCustomBigContentView(carouselView)
+            .setContentIntent(contentPendingIntent)
+            .setDeleteIntent(deletePendingIntent)
+            .build()
+        // show message again silently with next,prev and current item.
+        notification.flags = Notification.FLAG_AUTO_CANCEL or Notification.FLAG_ONLY_ALERT_ONCE
 
         Utils.loadCarouselImageToView(
             carouselView,
@@ -205,35 +270,13 @@ class PushNotificationReceiver : NotificationReceiver() {
             items[right]
         )
 
-        carouselView.setOnClickPendingIntent(R.id.den_carousel_left_arrow, carouselLeftIntent)
-        carouselView.setOnClickPendingIntent(
-            R.id.den_carousel_portrait_current_image,
-            carouseItemIntent
+        // show message
+        val notificationManager = NotificationManagerCompat.from(context)
+        notificationManager.notify(
+            message.messageSource,
+            message.messageId,
+            notification
         )
-        carouselView.setOnClickPendingIntent(R.id.den_carousel_item_title, carouseItemIntent)
-        carouselView.setOnClickPendingIntent(R.id.den_carousel_item_description, carouseItemIntent)
-        carouselView.setOnClickPendingIntent(R.id.den_carousel_right_arrow, carouselRightIntent)
-
-        val channelId = createNotificationChannel(context, message)
-
-        if (context != null) {
-            // set your views for the notification
-            val notification = NotificationCompat.Builder(context, channelId)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setCustomContentView(collapsedView)
-                .setCustomBigContentView(carouselView)
-                .setContentIntent(contentPendingIntent)
-                .setDeleteIntent(deletePendingIntent)
-                .build()
-            // show message again silently with next,prev and current item.
-            notification.flags = Notification.FLAG_AUTO_CANCEL or Notification.FLAG_ONLY_ALERT_ONCE
-            val notificationManager = NotificationManagerCompat.from(context);
-            notificationManager.notify(
-                message.messageSource,
-                message.messageId,
-                notification
-            )
-        }
     }
 
     private fun createNotificationChannel(context: Context?, message: Message?): String {
