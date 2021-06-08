@@ -11,6 +11,7 @@ import android.media.AudioAttributes
 import android.os.Build
 import android.util.Log
 import android.widget.RemoteViews
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.dengage.android.kotlin.sample.R
@@ -138,6 +139,7 @@ class PushNotificationReceiver : NotificationReceiver() {
             message.carouselContent,
             object : DengageCallback<Array<Bitmap>> {
                 override fun onError(error: DengageError) {
+                    Toast.makeText(context, error.errorMessage ?: "", Toast.LENGTH_LONG).show()
                     Log.e("NotificationReceiver", error.errorMessage ?: "")
                 }
 
@@ -254,7 +256,9 @@ class PushNotificationReceiver : NotificationReceiver() {
         // show message again silently with next,prev and current item.
         notification.flags = Notification.FLAG_AUTO_CANCEL or Notification.FLAG_ONLY_ALERT_ONCE
 
-        Utils.loadCarouselImageToView(
+
+        // --------- Behavior-1 ---------
+        /*Utils.loadCarouselImageToView(
             carouselView,
             R.id.den_carousel_portrait_left_image,
             items[left]
@@ -276,7 +280,45 @@ class PushNotificationReceiver : NotificationReceiver() {
             message.messageSource,
             message.messageId,
             notification
-        )
+        )*/
+        // --------- Behavior-1 ---------
+
+
+        // You can use alternate behavior, if carousel image download bug occurs
+        // Comment Behavior-1 and uncomment Behavior-2
+        // --------- Behavior-2 ---------
+        Utils.loadCarouselContents(
+            message.carouselContent,
+            object : DengageCallback<Array<Bitmap>> {
+                override fun onError(error: DengageError) {
+                    Toast.makeText(context, error.errorMessage ?: "", Toast.LENGTH_LONG).show()
+                    Log.e("NotificationReceiver", error.errorMessage ?: "")
+                }
+
+                override fun onResult(result: Array<Bitmap>) {
+                    carouselView.setImageViewBitmap(
+                        R.id.den_carousel_portrait_left_image,
+                        result[left]
+                    )
+                    carouselView.setImageViewBitmap(
+                        R.id.den_carousel_portrait_current_image,
+                        result[current]
+                    )
+                    carouselView.setImageViewBitmap(
+                        R.id.den_carousel_portrait_right_image,
+                        result[right]
+                    )
+
+                    // show message
+                    val notificationManager = NotificationManagerCompat.from(context)
+                    notificationManager.notify(
+                        message.messageSource,
+                        message.messageId,
+                        notification
+                    )
+                }
+            })
+        // --------- Behavior-2 ---------
     }
 
     private fun createNotificationChannel(context: Context?, message: Message?): String {
