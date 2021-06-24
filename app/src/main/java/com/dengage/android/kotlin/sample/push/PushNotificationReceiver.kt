@@ -47,26 +47,12 @@ class PushNotificationReceiver : NotificationReceiver() {
         val rightIntent = getRightItemIntent(intent.extras, context.packageName)
         val deleteIntent = getDeleteIntent(intent.extras, context.packageName)
         val contentIntent = getContentIntent(intent.extras, context.packageName)
-        val carouseItemIntent = PendingIntent.getBroadcast(
-            context, 0,
-            itemIntent, PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        val carouselLeftIntent = PendingIntent.getBroadcast(
-            context, 1,
-            leftIntent, PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        val carouselRightIntent = PendingIntent.getBroadcast(
-            context, 2,
-            rightIntent, PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        val deletePendingIntent = PendingIntent.getBroadcast(
-            context, 4,
-            deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        val contentPendingIntent = PendingIntent.getBroadcast(
-            context, 5,
-            contentIntent, PendingIntent.FLAG_UPDATE_CURRENT
-        )
+
+        val carouseItemIntent = getPendingIntent(context, 0, itemIntent)
+        val carouselLeftIntent = getPendingIntent(context, 1, leftIntent)
+        val carouselRightIntent = getPendingIntent(context, 2, rightIntent)
+        val deletePendingIntent = getPendingIntent(context, 4, deleteIntent)
+        val contentPendingIntent = getPendingIntent(context, 5, contentIntent)
 
         // set views for the layout
         val collapsedView = RemoteViews(
@@ -197,26 +183,12 @@ class PushNotificationReceiver : NotificationReceiver() {
         val rightIntent = getRightItemIntent(intent.extras, context.packageName)
         val deleteIntent = getDeleteIntent(intent.extras, context.packageName)
         val contentIntent = getContentIntent(intent.extras, context.packageName)
-        val carouseItemIntent = PendingIntent.getBroadcast(
-            context, 0,
-            itemIntent, PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        val carouselLeftIntent = PendingIntent.getBroadcast(
-            context, 1,
-            leftIntent, PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        val carouselRightIntent = PendingIntent.getBroadcast(
-            context, 2,
-            rightIntent, PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        val deletePendingIntent = PendingIntent.getBroadcast(
-            context, 4,
-            deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        val contentPendingIntent = PendingIntent.getBroadcast(
-            context, 5,
-            contentIntent, PendingIntent.FLAG_UPDATE_CURRENT
-        )
+
+        val carouseItemIntent = getPendingIntent(context, 0, itemIntent)
+        val carouselLeftIntent = getPendingIntent(context, 1, leftIntent)
+        val carouselRightIntent = getPendingIntent(context, 2, rightIntent)
+        val deletePendingIntent = getPendingIntent(context, 4, deleteIntent)
+        val contentPendingIntent = getPendingIntent(context, 5, contentIntent)
 
         // set views for the layout
         val collapsedView = RemoteViews(
@@ -348,6 +320,23 @@ class PushNotificationReceiver : NotificationReceiver() {
             notificationManager.createNotificationChannel(notificationChannel)
         }
         return channelId
+    }
+
+    private fun getPendingIntent(
+        context: Context,
+        requestCode: Int,
+        intent: Intent
+    ): PendingIntent {
+        return PendingIntent.getBroadcast(
+            context,
+            requestCode,
+            intent,
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            } else {
+                PendingIntent.FLAG_UPDATE_CURRENT
+            }
+        )
     }
 
 }
