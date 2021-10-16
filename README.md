@@ -79,9 +79,6 @@ You can change your contact key on Dengage after user login, register, logout et
     - `activity` -> `AppCompatActivity` for showing in app message 
     - `screenName` -> screen name of current screen
 
-- You can change some colors with overriding color values with the same resource names (See on [colors.xml](https://github.com/dengage-tech/dengage-android-sdk-sample/blob/master/app/src/main/res/values/colors.xml))
-    - `in_app_message_color_status_bar` -> In app message dialog has a status bar itself, you should set android status bar color 
-
 ### 9 - Send Tags (See class [TagsFragment](https://github.com/dengage-tech/dengage-android-sdk-sample/blob/master/app/src/main/java/com/dengage/android/kotlin/sample/ui/fragment/TagsFragment.kt))
 - `DengageManager.setTags` -> Use this method for sending tags
     #### Method Params
